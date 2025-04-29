@@ -513,7 +513,7 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: 1200px) {
+@media (max-width: 767px) {
     .teachers-grid {
         grid-template-columns: repeat(3, 1fr);
     }
