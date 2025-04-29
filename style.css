@@ -415,7 +415,7 @@
         }
         
         /* For mobile responsiveness */
-        @media (max-width: 758px) {
+        @media (max-width: 768px) {
             .header-container {
                 flex-direction: column;
                 text-align: center;
@@ -513,7 +513,7 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: 767px) {
+@media (max-width: 1200px) {
     .teachers-grid {
         grid-template-columns: repeat(3, 1fr);
     }
