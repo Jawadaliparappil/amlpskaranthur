@@ -415,7 +415,7 @@
         }
         
         /* For mobile responsiveness */
-        @media (max-width: 768px) {
+        @media (max-width: 758px) {
             .header-container {
                 flex-direction: column;
                 text-align: center;
