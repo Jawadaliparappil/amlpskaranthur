@@ -93,7 +93,7 @@
         
         /* Hero Section */
         .hero {
-            height: 500px;
+            height: auto;
             background-color: black;
             position: relative;
             overflow: hidden;
