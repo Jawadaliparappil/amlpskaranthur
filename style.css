@@ -115,39 +115,8 @@
     opacity: 0.2; /* 20% opacity */
     z-index: 0;
 }
-        .hero-content {
-            text-align: center;
-            color: white;
-            z-index: 1;
-            padding: 20px;
-        }
-        
-        .hero h2 {
-            font-size: 40px;
-            margin-bottom: 20px;
-        }
-        
-        .hero p {
-            font-size: 18px;
-            max-width: 600px;
-            margin: 0 auto 30px;
-        }
-        
-        .btn {
-            display: inline-block;
-            background-color: var(--secondary);
-            color: var(--dark);
-            padding: 12px 30px;
-            border-radius: 30px;
-            text-decoration: none;
-            font-weight: 700;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
+    
+       
         
         /* Features Section */
         .features {
