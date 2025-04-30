@@ -34,13 +34,115 @@
 
     <!-- Hero Section -->
     <section class="hero" id="home">
-        <div class="container hero-content">
-        
-            <h2>ADMISSION CONTINUES</h2>
-            <p>2025-26 Batch Admission continues to LKG,UKG,1-5 Standard Malayalam & English Medium.</p>
-            <a href="admission.html" class="btn">Apply Now</a>
-            
+        <section class="hero" id="home">
+       
+   
+   
+    <div class="container">
+        <div class="slider-container">
+            <div class="slider">
+                <div class="slide">
+                    <img src="" alt="Slide 1">
+                    <div class="slide-content">
+                        <h2>Welcome to Our Website</h2>
+                        <p>Discover our amazing services and products designed to meet your needs.</p>
+                        <a href="#" class="btn">Learn More</a>
+                    </div>
+                </div>
+                <div class="slide">
+                    <img src="s" alt="Slide 2">
+                    <div class="slide-content">
+                        <h2>Professional Solutions</h2>
+                        <p>We provide top-notch solutions tailored to your business requirements.</p>
+                        <a href="#" class="btn">Our Services</a>
+                    </div>
+                </div>
+                <div class="slide">
+                    <img src="/api/placeholder/1000/400" alt="Slide 3">
+                    <div class="slide-content">
+                        <h2>Creative Designs</h2>
+                        <p>Our team of experts creates stunning designs that stand out in the market.</p>
+                        <a href="#" class="btn">View Portfolio</a>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-arrow prev">&#10094;</div>
+            <div class="slide-arrow next">&#10095;</div>
+            <div class="slider-dots">
+                <div class="dot active"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
         </div>
+    </div>
+    
+    
+     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const slider = document.querySelector('.slider');
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.querySelector('.prev');
+            const nextBtn = document.querySelector('.next');
+            const dots = document.querySelectorAll('.dot');
+            
+            let currentSlide = 0;
+            const slideCount = slides.length;
+            
+            // Initialize slider
+            updateSlider();
+            
+            // Event listeners
+            prevBtn.addEventListener('click', () => {
+                currentSlide = (currentSlide - 1 + slideCount) % slideCount;
+                updateSlider();
+            });
+            
+            nextBtn.addEventListener('click', () => {
+                currentSlide = (currentSlide + 1) % slideCount;
+                updateSlider();
+            });
+            
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => {
+                    currentSlide = index;
+                    updateSlider();
+                });
+            });
+            
+            // Auto slide function
+            let slideInterval = setInterval(() => {
+                currentSlide = (currentSlide + 1) % slideCount;
+                updateSlider();
+            }, 5000);
+            
+            // Pause auto slide on mouse hover
+            slider.addEventListener('mouseenter', () => {
+                clearInterval(slideInterval);
+            });
+            
+            slider.addEventListener('mouseleave', () => {
+                slideInterval = setInterval(() => {
+                    currentSlide = (currentSlide + 1) % slideCount;
+                    updateSlider();
+                }, 5000);
+            });
+            
+            // Update slider position and active dot
+            function updateSlider() {
+                slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+                
+                dots.forEach((dot, index) => {
+                    if (index === currentSlide) {
+                        dot.classList.add('active');
+                    } else {
+                        dot.classList.remove('active');
+                    }
+                });
+            }
+        });
+    </script>
+    
+    </section>
     </section>
 
     <!-- Features Section -->
