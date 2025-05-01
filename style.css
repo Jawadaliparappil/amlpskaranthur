@@ -134,7 +134,7 @@
             position: relative;
             display: inline-block;
             padding-bottom: 15px;
-                padding-top: 15px;
+                padding-top: 50px;
         }
         
         .section-title h2::after {
