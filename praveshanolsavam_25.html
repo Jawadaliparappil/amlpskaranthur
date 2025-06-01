@@ -2,13 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Photo Upload with Crop</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Mobile Photo Upload with Crop</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -16,51 +17,57 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            flex-direction: column;
+            padding: 10px;
+            touch-action: manipulation;
         }
 
         .container {
             background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
             overflow: hidden;
-            max-width: 1200px;
+            max-width: 100%;
             width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         .header {
             background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             color: white;
-            padding: 40px;
+            padding: 20px;
             text-align: center;
         }
 
         .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 15px;
+            font-size: 1.8em;
+            margin-bottom: 8px;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .header p {
-            font-size: 1.2em;
+            font-size: 1em;
             opacity: 0.9;
         }
 
         .main-content {
-            padding: 50px;
+            padding: 20px;
             text-align: center;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         .upload-section {
-            margin-bottom: 40px;
+            margin-bottom: 20px;
         }
 
         .file-input-wrapper {
             position: relative;
             display: inline-block;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         .file-input {
@@ -74,117 +81,121 @@
         .upload-button {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 20px 40px;
-            border-radius: 15px;
+            padding: 18px 30px;
+            border-radius: 12px;
             cursor: pointer;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 600;
             transition: all 0.3s ease;
             display: inline-block;
             box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            touch-action: manipulation;
         }
 
-        .upload-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+        .upload-button:active {
+            transform: scale(0.98);
         }
 
         .crop-section {
             display: none;
             background: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
-            text-align: left;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            text-align: center;
         }
 
-        .crop-container {
-            display: flex;
-            gap: 30px;
-            align-items: flex-start;
+        .crop-section h3 {
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 1.2em;
         }
 
         .crop-canvas-container {
-            flex: 1;
-            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
         }
 
         .crop-canvas {
             border: 2px solid #ddd;
-            border-radius: 10px;
-            cursor: crosshair;
+            border-radius: 8px;
             max-width: 100%;
+            max-height: 60vh;
+            display: block;
+            margin: 0 auto;
+            touch-action: none;
         }
 
         .crop-controls {
-            width: 250px;
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
         }
 
-        .crop-controls h3 {
-            margin-bottom: 15px;
-            color: #333;
+        .crop-button, .cancel-button {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            min-width: 120px;
+            touch-action: manipulation;
         }
 
         .crop-button {
             background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
             color: white;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            width: 100%;
-            margin-bottom: 10px;
-        }
-
-        .crop-button:hover {
-            transform: translateY(-2px);
         }
 
         .cancel-button {
             background: #6c757d;
             color: white;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            width: 100%;
         }
 
-        .cancel-button:hover {
-            background: #5a6268;
-            transform: translateY(-2px);
+        .crop-button:active, .cancel-button:active {
+            transform: scale(0.95);
         }
 
         .crop-info {
-            margin: 15px 0;
-            font-size: 12px;
+            margin: 10px 0;
+            font-size: 14px;
             color: #666;
             line-height: 1.4;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
         }
 
         .canvas-container {
             background: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         #posterCanvas {
-            border: 3px dashed #e9ecef;
-            border-radius: 10px;
+            border: 2px dashed #e9ecef;
+            border-radius: 8px;
             max-width: 100%;
+            max-height: 50vh;
             transition: all 0.3s ease;
+            display: block;
+            margin: 0 auto;
         }
 
         #posterCanvas.has-content {
@@ -196,7 +207,7 @@
         .download-button {
             background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
             color: white;
-            padding: 15px 35px;
+            padding: 18px 30px;
             border: none;
             border-radius: 12px;
             cursor: pointer;
@@ -204,11 +215,14 @@
             font-weight: bold;
             transition: all 0.3s ease;
             box-shadow: 0 8px 25px rgba(17, 153, 142, 0.3);
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
+            touch-action: manipulation;
         }
 
-        .download-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 30px rgba(17, 153, 142, 0.4);
+        .download-button:active {
+            transform: scale(0.98);
         }
 
         .download-button:disabled {
@@ -220,38 +234,105 @@
 
         .instructions {
             color: #666;
-            font-size: 16px;
-            margin-bottom: 30px;
-            line-height: 1.6;
+            font-size: 14px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
         }
 
         .selection-overlay {
             position: absolute;
-            border: 2px dashed #ff6b6b;
-            background: rgba(255, 107, 107, 0.1);
+            border: 3px dashed #ff6b6b;
+            background: rgba(255, 107, 107, 0.2);
             pointer-events: none;
+            border-radius: 4px;
         }
 
-        @media (max-width: 768px) {
+        .touch-hint {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .touch-hint.show {
+            opacity: 1;
+        }
+
+        .resize-handles {
+            position: absolute;
+            pointer-events: all;
+        }
+
+        .resize-handle {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #ff6b6b;
+            border: 2px solid white;
+            border-radius: 50%;
+            cursor: pointer;
+            transform: translate(-50%, -50%);
+            touch-action: none;
+        }
+
+        .resize-handle.nw { top: 0; left: 0; }
+        .resize-handle.ne { top: 0; right: 0; transform: translate(50%, -50%); }
+        .resize-handle.sw { bottom: 0; left: 0; transform: translate(-50%, 50%); }
+        .resize-handle.se { bottom: 0; right: 0; transform: translate(50%, 50%); }
+
+        /* Improved mobile responsiveness */
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+            
+            .header {
+                padding: 15px;
+            }
+            
             .header h1 {
-                font-size: 2em;
+                font-size: 1.5em;
             }
             
             .main-content {
-                padding: 30px 20px;
+                padding: 15px;
             }
             
-            .upload-button {
-                padding: 15px 25px;
-                font-size: 16px;
-            }
-
-            .crop-container {
-                flex-direction: column;
-            }
-
             .crop-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .crop-button, .cancel-button {
                 width: 100%;
+                max-width: 200px;
+            }
+            
+            #posterCanvas {
+                max-height: 40vh;
+            }
+        }
+
+        /* Landscape mode adjustments */
+        @media (orientation: landscape) and (max-height: 600px) {
+            .crop-canvas {
+                max-height: 40vh;
+            }
+            
+            #posterCanvas {
+                max-height: 35vh;
             }
         }
     </style>
@@ -259,43 +340,47 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>📸 Photo Crop & Upload</h1>
-            <p>Upload and crop your photo to fit perfectly in the poster frame</p>
+            <h1>📸 Mobile Photo Crop</h1>
+            <p>Upload and crop your photo with touch controls</p>
         </div>
         
         <div class="main-content">
             <div class="instructions">
-                Click the button below to upload a photo. You'll be able to crop it before adding to the poster.
+                Tap to upload a photo, then use touch gestures to crop it perfectly for your poster.
             </div>
 
             <div class="upload-section">
                 <div class="file-input-wrapper">
-                    <input type="file" id="photoInput" class="file-input" accept="image/*">
+                    <input type="file" id="photoInput" class="file-input" accept="image/*" capture="environment">
                     <div class="upload-button">
-                        🖼️ Choose Photo to Upload
+                        📱 Take or Choose Photo
                     </div>
                 </div>
             </div>
 
             <div class="crop-section" id="cropSection">
-                <h3 style="margin-bottom: 20px; color: #333; text-align: center;">Crop Your Photo</h3>
-                <div class="crop-container">
-                    <div class="crop-canvas-container">
-                        <canvas id="cropCanvas" class="crop-canvas"></canvas>
+                <h3>Crop Your Photo</h3>
+                <div class="crop-info">
+                    Touch and drag to select the crop area. Use the corner handles to resize precisely.
+                </div>
+                <div class="crop-canvas-container">
+                    <div class="touch-hint" id="touchHint">Touch and drag to select area</div>
+                    <canvas id="cropCanvas" class="crop-canvas"></canvas>
+                    <div class="resize-handles" id="resizeHandles" style="display: none;">
+                        <div class="resize-handle nw" data-handle="nw"></div>
+                        <div class="resize-handle ne" data-handle="ne"></div>
+                        <div class="resize-handle sw" data-handle="sw"></div>
+                        <div class="resize-handle se" data-handle="se"></div>
                     </div>
-                    <div class="crop-controls">
-                        <h3>Crop Controls</h3>
-                        <div class="crop-info">
-                            Click and drag on the image to select the area you want to crop. The selection will be resized to fit the square poster frame.
-                        </div>
-                        <button class="crop-button" id="applyCropBtn">✂️ Apply Crop</button>
-                        <button class="cancel-button" id="cancelCropBtn">❌ Cancel</button>
-                    </div>
+                </div>
+                <div class="crop-controls">
+                    <button class="crop-button" id="applyCropBtn">✂️ Apply Crop</button>
+                    <button class="cancel-button" id="cancelCropBtn">❌ Cancel</button>
                 </div>
             </div>
 
             <div class="canvas-container">
-                <canvas id="posterCanvas" width="600" height="800"></canvas>
+                <canvas id="posterCanvas" width="400" height="600"></canvas>
             </div>
 
             <button class="download-button" id="downloadBtn" onclick="downloadPoster()" disabled>
@@ -314,37 +399,39 @@
         const applyCropBtn = document.getElementById('applyCropBtn');
         const cancelCropBtn = document.getElementById('cancelCropBtn');
         const downloadBtn = document.getElementById('downloadBtn');
+        const touchHint = document.getElementById('touchHint');
+        const resizeHandles = document.getElementById('resizeHandles');
 
         let currentImage = null;
         let croppedPhoto = null;
         let backgroundImage = null;
         let isSelecting = false;
-        let selectionStart = { x: 0, y: 0 };
-        let selectionEnd = { x: 0, y: 0 };
+        let isResizing = false;
+        let activeHandle = null;
         let selectionRect = { x: 0, y: 0, width: 0, height: 0 };
+        let touchStartPos = { x: 0, y: 0 };
         
-        // Fixed photo frame rectangle
+        // Optimized photo frame for mobile
         const PHOTO_FRAME = {
-            x: 250,
-            y: 450,
-            width: 150,
-            height: 200
+            x: 100,
+            y: 250,
+            width: 200,
+            height: 250
         };
+
+        // Touch event handling
+        function getTouchPos(e) {
+            const rect = cropCanvas.getBoundingClientRect();
+            const touch = e.touches[0] || e.changedTouches[0];
+            return {
+                x: (touch.clientX - rect.left) * (cropCanvas.width / rect.width),
+                y: (touch.clientY - rect.top) * (cropCanvas.height / rect.height)
+            };
+        }
 
         // Load background image
         function loadBackgroundImage() {
-            backgroundImage = new Image();
-            backgroundImage.onload = function() {
-                redrawCanvas();
-            };
-            backgroundImage.onerror = function() {
-                console.log('Background image failed to load, using default background');
-                createFallbackBackground();
-            };
-            // Replace this URL with your desired background image URL or base64 data
-            backgroundImage.src = '/AAA.jpg';
-            // Or use base64 data like this:
-            // backgroundImage.src = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQ...';
+            createFallbackBackground();
         }
 
         // Create fallback background pattern
@@ -356,22 +443,13 @@
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
             ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
-            for (let i = 0; i < 20; i++) {
+            for (let i = 0; i < 15; i++) {
                 const x = Math.random() * canvas.width;
                 const y = Math.random() * canvas.height;
-                const radius = Math.random() * 5 + 2;
+                const radius = Math.random() * 4 + 2;
                 ctx.beginPath();
                 ctx.arc(x, y, radius, 0, Math.PI * 2);
                 ctx.fill();
-            }
-        }
-
-        // Draw background
-        function createBackground() {
-            if (backgroundImage && backgroundImage.complete && backgroundImage.naturalWidth > 0) {
-                ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
-            } else {
-                createFallbackBackground();
             }
         }
 
@@ -381,20 +459,19 @@
             ctx.fillRect(PHOTO_FRAME.x, PHOTO_FRAME.y, PHOTO_FRAME.width, PHOTO_FRAME.height);
             
             ctx.strokeStyle = '#333';
-            ctx.lineWidth = 3;
+            ctx.lineWidth = 2;
             ctx.strokeRect(PHOTO_FRAME.x, PHOTO_FRAME.y, PHOTO_FRAME.width, PHOTO_FRAME.height);
             
             ctx.strokeStyle = 'rgba(0, 0, 0, 0.2)';
             ctx.lineWidth = 1;
-            ctx.strokeRect(PHOTO_FRAME.x + 5, PHOTO_FRAME.y + 5, PHOTO_FRAME.width - 10, PHOTO_FRAME.height - 10);
+            ctx.strokeRect(PHOTO_FRAME.x + 3, PHOTO_FRAME.y + 3, PHOTO_FRAME.width - 6, PHOTO_FRAME.height - 6);
             
             if (!croppedPhoto) {
                 ctx.fillStyle = '#999';
-                ctx.font = '18px Arial';
+                ctx.font = '14px Arial';
                 ctx.textAlign = 'center';
-                ctx.fillText('Photo will appear here', 
-                    PHOTO_FRAME.x + PHOTO_FRAME.width / 2, 
-                    PHOTO_FRAME.y + PHOTO_FRAME.height / 2);
+                ctx.fillText('Photo will', PHOTO_FRAME.x + PHOTO_FRAME.width / 2, PHOTO_FRAME.y + PHOTO_FRAME.height / 2 - 10);
+                ctx.fillText('appear here', PHOTO_FRAME.x + PHOTO_FRAME.width / 2, PHOTO_FRAME.y + PHOTO_FRAME.height / 2 + 10);
             }
         }
 
@@ -418,9 +495,10 @@
         function showCropInterface() {
             cropSection.style.display = 'block';
             
-            // Calculate canvas size to fit image while maintaining aspect ratio
-            const maxWidth = 500;
-            const maxHeight = 400;
+            // Calculate canvas size for mobile
+            const containerWidth = cropSection.offsetWidth - 30;
+            const maxWidth = Math.min(containerWidth, 400);
+            const maxHeight = window.innerHeight * 0.5;
             const imageAspect = currentImage.width / currentImage.height;
             
             let canvasWidth, canvasHeight;
@@ -428,8 +506,8 @@
                 canvasWidth = maxWidth;
                 canvasHeight = maxWidth / imageAspect;
             } else {
-                canvasHeight = maxHeight;
-                canvasWidth = maxHeight * imageAspect;
+                canvasHeight = Math.min(maxHeight, maxWidth / imageAspect);
+                canvasWidth = canvasHeight * imageAspect;
             }
             
             cropCanvas.width = canvasWidth;
@@ -438,57 +516,218 @@
             // Draw the image
             cropCtx.drawImage(currentImage, 0, 0, canvasWidth, canvasHeight);
             
-            // Reset selection
-            selectionRect = { x: 0, y: 0, width: 0, height: 0 };
+            // Initialize selection to center of image
+            const size = Math.min(canvasWidth, canvasHeight) * 0.6;
+            selectionRect = {
+                x: (canvasWidth - size) / 2,
+                y: (canvasHeight - size) / 2,
+                width: size,
+                height: size
+            };
+            
+            drawCropSelection();
+            showTouchHint();
         }
 
-        // Crop canvas mouse events
-        cropCanvas.addEventListener('mousedown', function(e) {
-            const rect = cropCanvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
+        // Show touch hint
+        function showTouchHint() {
+            touchHint.classList.add('show');
+            setTimeout(() => {
+                touchHint.classList.remove('show');
+            }, 3000);
+        }
+
+        // Touch events for crop canvas
+        cropCanvas.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            const pos = getTouchPos(e);
+            touchStartPos = pos;
             
+            // Check if touching resize handles
+            if (isPointInHandle(pos)) {
+                isResizing = true;
+                return;
+            }
+            
+            // Check if touching inside selection
+            if (isPointInSelection(pos)) {
+                isSelecting = true;
+                return;
+            }
+            
+            // Start new selection
             isSelecting = true;
-            selectionStart = { x, y };
-            selectionEnd = { x, y };
+            selectionRect = { x: pos.x, y: pos.y, width: 0, height: 0 };
         });
 
-        cropCanvas.addEventListener('mousemove', function(e) {
-            if (!isSelecting) return;
+        cropCanvas.addEventListener('touchmove', function(e) {
+            e.preventDefault();
+            const pos = getTouchPos(e);
             
-            const rect = cropCanvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
+            if (isResizing) {
+                resizeSelection(pos);
+            } else if (isSelecting) {
+                if (isPointInSelection(touchStartPos)) {
+                    // Move selection
+                    const dx = pos.x - touchStartPos.x;
+                    const dy = pos.y - touchStartPos.y;
+                    moveSelection(dx, dy);
+                    touchStartPos = pos;
+                } else {
+                    // Resize selection
+                    updateSelection(touchStartPos, pos);
+                }
+            }
             
-            selectionEnd = { x, y };
+            drawCropSelection();
+        });
+
+        cropCanvas.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            isSelecting = false;
+            isResizing = false;
+            activeHandle = null;
+        });
+
+        // Helper functions
+        function isPointInSelection(point) {
+            return point.x >= selectionRect.x && 
+                   point.x <= selectionRect.x + selectionRect.width &&
+                   point.y >= selectionRect.y && 
+                   point.y <= selectionRect.y + selectionRect.height;
+        }
+
+        function isPointInHandle(point) {
+            // Simplified handle detection for touch
+            const handles = [
+                { x: selectionRect.x, y: selectionRect.y, handle: 'nw' },
+                { x: selectionRect.x + selectionRect.width, y: selectionRect.y, handle: 'ne' },
+                { x: selectionRect.x, y: selectionRect.y + selectionRect.height, handle: 'sw' },
+                { x: selectionRect.x + selectionRect.width, y: selectionRect.y + selectionRect.height, handle: 'se' }
+            ];
             
-            // Redraw image and selection
+            for (let handle of handles) {
+                const distance = Math.sqrt(Math.pow(point.x - handle.x, 2) + Math.pow(point.y - handle.y, 2));
+                if (distance < 30) { // Larger touch area
+                    activeHandle = handle.handle;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function updateSelection(start, end) {
+            const x = Math.min(start.x, end.x);
+            const y = Math.min(start.y, end.y);
+            const width = Math.abs(end.x - start.x);
+            const height = Math.abs(end.y - start.y);
+            
+            // Keep square selection
+            const size = Math.min(width, height);
+            selectionRect = { x, y, width: size, height: size };
+            
+            // Constrain to canvas bounds
+            constrainSelection();
+        }
+
+        function moveSelection(dx, dy) {
+            selectionRect.x += dx;
+            selectionRect.y += dy;
+            constrainSelection();
+        }
+
+        function resizeSelection(pos) {
+            if (!activeHandle) return;
+            
+            const originalRect = { ...selectionRect };
+            
+            switch (activeHandle) {
+                case 'nw':
+                    selectionRect.x = pos.x;
+                    selectionRect.y = pos.y;
+                    selectionRect.width = originalRect.x + originalRect.width - pos.x;
+                    selectionRect.height = originalRect.y + originalRect.height - pos.y;
+                    break;
+                case 'ne':
+                    selectionRect.y = pos.y;
+                    selectionRect.width = pos.x - originalRect.x;
+                    selectionRect.height = originalRect.y + originalRect.height - pos.y;
+                    break;
+                case 'sw':
+                    selectionRect.x = pos.x;
+                    selectionRect.width = originalRect.x + originalRect.width - pos.x;
+                    selectionRect.height = pos.y - originalRect.y;
+                    break;
+                case 'se':
+                    selectionRect.width = pos.x - originalRect.x;
+                    selectionRect.height = pos.y - originalRect.y;
+                    break;
+            }
+            
+            // Keep square
+            const size = Math.min(Math.abs(selectionRect.width), Math.abs(selectionRect.height));
+            selectionRect.width = size;
+            selectionRect.height = size;
+            
+            constrainSelection();
+        }
+
+        function constrainSelection() {
+            // Ensure selection stays within canvas
+            selectionRect.x = Math.max(0, Math.min(selectionRect.x, cropCanvas.width - selectionRect.width));
+            selectionRect.y = Math.max(0, Math.min(selectionRect.y, cropCanvas.height - selectionRect.height));
+            selectionRect.width = Math.max(20, Math.min(selectionRect.width, cropCanvas.width - selectionRect.x));
+            selectionRect.height = Math.max(20, Math.min(selectionRect.height, cropCanvas.height - selectionRect.y));
+        }
+
+        function drawCropSelection() {
+            // Redraw image
             cropCtx.clearRect(0, 0, cropCanvas.width, cropCanvas.height);
             cropCtx.drawImage(currentImage, 0, 0, cropCanvas.width, cropCanvas.height);
             
-            // Draw selection rectangle
-            const selX = Math.min(selectionStart.x, selectionEnd.x);
-            const selY = Math.min(selectionStart.y, selectionEnd.y);
-            const selW = Math.abs(selectionEnd.x - selectionStart.x);
-            const selH = Math.abs(selectionEnd.y - selectionStart.y);
+            // Draw dimmed overlay
+            cropCtx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+            cropCtx.fillRect(0, 0, cropCanvas.width, cropCanvas.height);
             
-            // Make selection square (use smaller dimension)
-            const selSize = Math.min(selW, selH);
+            // Clear selection area
+            cropCtx.clearRect(selectionRect.x, selectionRect.y, selectionRect.width, selectionRect.height);
+            cropCtx.drawImage(currentImage, 
+                selectionRect.x * (currentImage.width / cropCanvas.width),
+                selectionRect.y * (currentImage.height / cropCanvas.height),
+                selectionRect.width * (currentImage.width / cropCanvas.width),
+                selectionRect.height * (currentImage.height / cropCanvas.height),
+                selectionRect.x, selectionRect.y, selectionRect.width, selectionRect.height
+            );
             
+            // Draw selection border
             cropCtx.strokeStyle = '#ff6b6b';
-            cropCtx.lineWidth = 2;
-            cropCtx.setLineDash([5, 5]);
-            cropCtx.strokeRect(selX, selY, selSize, selSize);
+            cropCtx.lineWidth = 3;
+            cropCtx.strokeRect(selectionRect.x, selectionRect.y, selectionRect.width, selectionRect.height);
             
-            cropCtx.fillStyle = 'rgba(255, 107, 107, 0.1)';
-            cropCtx.fillRect(selX, selY, selSize, selSize);
-            
-            selectionRect = { x: selX, y: selY, width: selSize, height: selSize };
-        });
+            // Draw corner handles
+            drawCornerHandles();
+        }
 
-        cropCanvas.addEventListener('mouseup', function(e) {
-            isSelecting = false;
-        });
+        function drawCornerHandles() {
+            const handleSize = 12;
+            cropCtx.fillStyle = '#ff6b6b';
+            cropCtx.strokeStyle = 'white';
+            cropCtx.lineWidth = 2;
+            
+            const corners = [
+                { x: selectionRect.x, y: selectionRect.y },
+                { x: selectionRect.x + selectionRect.width, y: selectionRect.y },
+                { x: selectionRect.x, y: selectionRect.y + selectionRect.height },
+                { x: selectionRect.x + selectionRect.width, y: selectionRect.y + selectionRect.height }
+            ];
+            
+            corners.forEach(corner => {
+                cropCtx.beginPath();
+                cropCtx.arc(corner.x, corner.y, handleSize, 0, Math.PI * 2);
+                cropCtx.fill();
+                cropCtx.stroke();
+            });
+        }
 
         // Apply crop button
         applyCropBtn.addEventListener('click', function() {
@@ -538,7 +777,7 @@
         function redrawCanvas() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            createBackground();
+            createFallbackBackground();
             drawPhotoFrame();
             
             canvas.classList.add('has-content');
@@ -554,7 +793,7 @@
             }
             
             ctx.strokeStyle = '#333';
-            ctx.lineWidth = 3;
+            ctx.lineWidth = 2;
             ctx.strokeRect(PHOTO_FRAME.x, PHOTO_FRAME.y, PHOTO_FRAME.width, PHOTO_FRAME.height);
         }
 
@@ -563,14 +802,36 @@
             if (!croppedPhoto) return;
             
             const link = document.createElement('a');
-            link.download = 'my-poster.png';
+            link.download = 'my-mobile-poster.png';
             link.href = canvas.toDataURL();
             link.click();
         }
 
+        // Prevent default touch behaviors
+        document.addEventListener('touchstart', function(e) {
+            if (e.target.closest('.crop-canvas')) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        document.addEventListener('touchmove', function(e) {
+            if (e.target.closest('.crop-canvas')) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
         // Initial setup
         loadBackgroundImage();
         redrawCanvas();
+
+        // Handle orientation changes
+        window.addEventListener('orientationchange', function() {
+            setTimeout(() => {
+                if (cropSection.style.display !== 'none' && currentImage) {
+                    showCropInterface();
+                }
+            }, 500);
+        });
     </script>
 </body>
 </html>
