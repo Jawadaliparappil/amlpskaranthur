@@ -413,10 +413,10 @@
         
         // Optimized photo frame for mobile
         const PHOTO_FRAME = {
-            x: 250,
-            y: 450,
-            width: 150,
-            height: 200
+            x: 100,
+            y: 250,
+            width: 200,
+            height: 250
         };
 
         // Touch event handling
@@ -431,7 +431,27 @@
 
         // Load background image
         function loadBackgroundImage() {
-            createFallbackBackground();
+            backgroundImage = new Image();
+            backgroundImage.onload = function() {
+                redrawCanvas();
+            };
+            backgroundImage.onerror = function() {
+                console.log('Background image failed to load, using default background');
+                createFallbackBackground();
+            };
+            // Replace this URL with your desired background image URL or base64 data
+            backgroundImage.src = '/AAA.jpg';
+            // Or use base64 data like this:
+            // backgroundImage.src = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQ...';
+        }
+
+        // Draw background
+        function createBackground() {
+            if (backgroundImage && backgroundImage.complete && backgroundImage.naturalWidth > 0) {
+                ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+            } else {
+                createFallbackBackground();
+            }
         }
 
         // Create fallback background pattern
@@ -777,7 +797,7 @@
         function redrawCanvas() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            createFallbackBackground();
+            createBackground();
             drawPhotoFrame();
             
             canvas.classList.add('has-content');
