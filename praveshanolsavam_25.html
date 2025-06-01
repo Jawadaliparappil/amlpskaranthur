@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Upload with Crop</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            padding: 50px;
+            text-align: center;
+        }
+
+        .upload-section {
+            margin-bottom: 40px;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 30px;
+        }
+
+        .file-input {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .upload-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 40px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .upload-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .crop-section {
+            display: none;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .crop-container {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+        }
+
+        .crop-canvas-container {
+            flex: 1;
+            text-align: center;
+        }
+
+        .crop-canvas {
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            cursor: crosshair;
+            max-width: 100%;
+        }
+
+        .crop-controls {
+            width: 250px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .crop-controls h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .crop-button {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .crop-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .cancel-button {
+            background: #6c757d;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .cancel-button:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .crop-info {
+            margin: 15px 0;
+            font-size: 12px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .canvas-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        #posterCanvas {
+            border: 3px dashed #e9ecef;
+            border-radius: 10px;
+            max-width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        #posterCanvas.has-content {
+            border-style: solid;
+            border-color: #4facfe;
+            box-shadow: 0 5px 20px rgba(79, 172, 254, 0.2);
+        }
+
+        .download-button {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            padding: 15px 35px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(17, 153, 142, 0.3);
+        }
+
+        .download-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(17, 153, 142, 0.4);
+        }
+
+        .download-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .instructions {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .selection-overlay {
+            position: absolute;
+            border: 2px dashed #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+            pointer-events: none;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .main-content {
+                padding: 30px 20px;
+            }
+            
+            .upload-button {
+                padding: 15px 25px;
+                font-size: 16px;
+            }
+
+            .crop-container {
+                flex-direction: column;
+            }
+
+            .crop-controls {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📸 Photo Crop & Upload</h1>
+            <p>Upload and crop your photo to fit perfectly in the poster frame</p>
+        </div>
+        
+        <div class="main-content">
+            <div class="instructions">
+                Click the button below to upload a photo. You'll be able to crop it before adding to the poster.
+            </div>
+
+            <div class="upload-section">
+                <div class="file-input-wrapper">
+                    <input type="file" id="photoInput" class="file-input" accept="image/*">
+                    <div class="upload-button">
+                        🖼️ Choose Photo to Upload
+                    </div>
+                </div>
+            </div>
+
+            <div class="crop-section" id="cropSection">
+                <h3 style="margin-bottom: 20px; color: #333; text-align: center;">Crop Your Photo</h3>
+                <div class="crop-container">
+                    <div class="crop-canvas-container">
+                        <canvas id="cropCanvas" class="crop-canvas"></canvas>
+                    </div>
+                    <div class="crop-controls">
+                        <h3>Crop Controls</h3>
+                        <div class="crop-info">
+                            Click and drag on the image to select the area you want to crop. The selection will be resized to fit the square poster frame.
+                        </div>
+                        <button class="crop-button" id="applyCropBtn">✂️ Apply Crop</button>
+                        <button class="cancel-button" id="cancelCropBtn">❌ Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="canvas-container">
+                <canvas id="posterCanvas" width="600" height="800"></canvas>
+            </div>
+
+            <button class="download-button" id="downloadBtn" onclick="downloadPoster()" disabled>
+                💾 Download Poster
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('posterCanvas');
+        const ctx = canvas.getContext('2d');
+        const photoInput = document.getElementById('photoInput');
+        const cropSection = document.getElementById('cropSection');
+        const cropCanvas = document.getElementById('cropCanvas');
+        const cropCtx = cropCanvas.getContext('2d');
+        const applyCropBtn = document.getElementById('applyCropBtn');
+        const cancelCropBtn = document.getElementById('cancelCropBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+
+        let currentImage = null;
+        let croppedPhoto = null;
+        let backgroundImage = null;
+        let isSelecting = false;
+        let selectionStart = { x: 0, y: 0 };
+        let selectionEnd = { x: 0, y: 0 };
+        let selectionRect = { x: 0, y: 0, width: 0, height: 0 };
+        
+        // Fixed photo frame rectangle
+        const PHOTO_FRAME = {
+            x: 250,
+            y: 450,
+            width: 150,
+            height: 200
+        };
+
+        // Load background image
+        function loadBackgroundImage() {
+            backgroundImage = new Image();
+            backgroundImage.onload = function() {
+                redrawCanvas();
+            };
+            backgroundImage.onerror = function() {
+                console.log('Background image failed to load, using default background');
+                createFallbackBackground();
+            };
+            // Replace this URL with your desired background image URL or base64 data
+            backgroundImage.src = '/home/jawad/Pictures/Untitled.png';
+            // Or use base64 data like this:
+            // backgroundImage.src = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQ...';
+        }
+
+        // Create fallback background pattern
+        function createFallbackBackground() {
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gradient.addColorStop(0, '#e3f2fd');
+            gradient.addColorStop(1, '#bbdefb');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+            for (let i = 0; i < 20; i++) {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height;
+                const radius = Math.random() * 5 + 2;
+                ctx.beginPath();
+                ctx.arc(x, y, radius, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // Draw background
+        function createBackground() {
+            if (backgroundImage && backgroundImage.complete && backgroundImage.naturalWidth > 0) {
+                ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+            } else {
+                createFallbackBackground();
+            }
+        }
+
+        // Draw the photo frame rectangle
+        function drawPhotoFrame() {
+            ctx.fillStyle = 'white';
+            ctx.fillRect(PHOTO_FRAME.x, PHOTO_FRAME.y, PHOTO_FRAME.width, PHOTO_FRAME.height);
+            
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(PHOTO_FRAME.x, PHOTO_FRAME.y, PHOTO_FRAME.width, PHOTO_FRAME.height);
+            
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.2)';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(PHOTO_FRAME.x + 5, PHOTO_FRAME.y + 5, PHOTO_FRAME.width - 10, PHOTO_FRAME.height - 10);
+            
+            if (!croppedPhoto) {
+                ctx.fillStyle = '#999';
+                ctx.font = '18px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('Photo will appear here', 
+                    PHOTO_FRAME.x + PHOTO_FRAME.width / 2, 
+                    PHOTO_FRAME.y + PHOTO_FRAME.height / 2);
+            }
+        }
+
+        // Photo upload handler
+        photoInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                currentImage = new Image();
+                currentImage.onload = function() {
+                    showCropInterface();
+                };
+                currentImage.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // Show crop interface
+        function showCropInterface() {
+            cropSection.style.display = 'block';
+            
+            // Calculate canvas size to fit image while maintaining aspect ratio
+            const maxWidth = 500;
+            const maxHeight = 400;
+            const imageAspect = currentImage.width / currentImage.height;
+            
+            let canvasWidth, canvasHeight;
+            if (imageAspect > maxWidth / maxHeight) {
+                canvasWidth = maxWidth;
+                canvasHeight = maxWidth / imageAspect;
+            } else {
+                canvasHeight = maxHeight;
+                canvasWidth = maxHeight * imageAspect;
+            }
+            
+            cropCanvas.width = canvasWidth;
+            cropCanvas.height = canvasHeight;
+            
+            // Draw the image
+            cropCtx.drawImage(currentImage, 0, 0, canvasWidth, canvasHeight);
+            
+            // Reset selection
+            selectionRect = { x: 0, y: 0, width: 0, height: 0 };
+        }
+
+        // Crop canvas mouse events
+        cropCanvas.addEventListener('mousedown', function(e) {
+            const rect = cropCanvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            isSelecting = true;
+            selectionStart = { x, y };
+            selectionEnd = { x, y };
+        });
+
+        cropCanvas.addEventListener('mousemove', function(e) {
+            if (!isSelecting) return;
+            
+            const rect = cropCanvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            selectionEnd = { x, y };
+            
+            // Redraw image and selection
+            cropCtx.clearRect(0, 0, cropCanvas.width, cropCanvas.height);
+            cropCtx.drawImage(currentImage, 0, 0, cropCanvas.width, cropCanvas.height);
+            
+            // Draw selection rectangle
+            const selX = Math.min(selectionStart.x, selectionEnd.x);
+            const selY = Math.min(selectionStart.y, selectionEnd.y);
+            const selW = Math.abs(selectionEnd.x - selectionStart.x);
+            const selH = Math.abs(selectionEnd.y - selectionStart.y);
+            
+            // Make selection square (use smaller dimension)
+            const selSize = Math.min(selW, selH);
+            
+            cropCtx.strokeStyle = '#ff6b6b';
+            cropCtx.lineWidth = 2;
+            cropCtx.setLineDash([5, 5]);
+            cropCtx.strokeRect(selX, selY, selSize, selSize);
+            
+            cropCtx.fillStyle = 'rgba(255, 107, 107, 0.1)';
+            cropCtx.fillRect(selX, selY, selSize, selSize);
+            
+            selectionRect = { x: selX, y: selY, width: selSize, height: selSize };
+        });
+
+        cropCanvas.addEventListener('mouseup', function(e) {
+            isSelecting = false;
+        });
+
+        // Apply crop button
+        applyCropBtn.addEventListener('click', function() {
+            if (selectionRect.width === 0 || selectionRect.height === 0) {
+                alert('Please select an area to crop first!');
+                return;
+            }
+            
+            // Calculate the crop area relative to the original image
+            const scaleX = currentImage.width / cropCanvas.width;
+            const scaleY = currentImage.height / cropCanvas.height;
+            
+            const cropX = selectionRect.x * scaleX;
+            const cropY = selectionRect.y * scaleY;
+            const cropSize = selectionRect.width * scaleX;
+            
+            // Create cropped image
+            const tempCanvas = document.createElement('canvas');
+            const tempCtx = tempCanvas.getContext('2d');
+            tempCanvas.width = cropSize;
+            tempCanvas.height = cropSize;
+            
+            tempCtx.drawImage(
+                currentImage,
+                cropX, cropY, cropSize, cropSize,
+                0, 0, cropSize, cropSize
+            );
+            
+            // Convert to image
+            croppedPhoto = new Image();
+            croppedPhoto.onload = function() {
+                cropSection.style.display = 'none';
+                redrawCanvas();
+                downloadBtn.disabled = false;
+            };
+            croppedPhoto.src = tempCanvas.toDataURL();
+        });
+
+        // Cancel crop button
+        cancelCropBtn.addEventListener('click', function() {
+            cropSection.style.display = 'none';
+            currentImage = null;
+            photoInput.value = '';
+        });
+
+        // Redraw canvas
+        function redrawCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            createBackground();
+            drawPhotoFrame();
+            
+            canvas.classList.add('has-content');
+
+            if (croppedPhoto) {
+                ctx.save();
+                ctx.beginPath();
+                ctx.rect(PHOTO_FRAME.x, PHOTO_FRAME.y, PHOTO_FRAME.width, PHOTO_FRAME.height);
+                ctx.clip();
+                
+                ctx.drawImage(croppedPhoto, PHOTO_FRAME.x, PHOTO_FRAME.y, PHOTO_FRAME.width, PHOTO_FRAME.height);
+                ctx.restore();
+            }
+            
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(PHOTO_FRAME.x, PHOTO_FRAME.y, PHOTO_FRAME.width, PHOTO_FRAME.height);
+        }
+
+        // Download function
+        function downloadPoster() {
+            if (!croppedPhoto) return;
+            
+            const link = document.createElement('a');
+            link.download = 'my-poster.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+
+        // Initial setup
+        loadBackgroundImage();
+        redrawCanvas();
+    </script>
+</body>
+</html>
