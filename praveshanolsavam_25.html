@@ -94,16 +94,35 @@
       color: #444;
       text-align: center;
     }
+
+    #cropModal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+
+    #cropModal img {
+      max-width: 90vw;
+      max-height: 80vh;
+    }
   </style>
+  <link  href="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.css" rel="stylesheet" />
 </head>
 <body>
   <div class="container">
     <div class="header">
       <h1>📸 Mobile Photo Frame</h1>
-      <p>Upload your photo to place and adjust it inside the frame</p>
+      <p>Upload your photo and crop it to fit inside the frame</p>
     </div>
     <div class="instructions">
-      Choose a photo and then drag or pinch to reposition and scale it inside the frame area.
+      Choose a photo. You'll be able to crop it before placing it into the frame.
     </div>
     <input type="file" id="photoInput" accept="image/*" class="button">
     <div class="canvas-container">
@@ -113,11 +132,21 @@
       💾 Download Poster
     </button>
 
+    <div id="cropModal" style="display:none;">
+      <div>
+        <img id="cropImage" src="" alt="Crop preview">
+        <button class="button" onclick="applyCrop()">✅ Crop and Apply</button>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.js"></script>
     <script>
       const canvas = document.getElementById('posterCanvas');
       const ctx = canvas.getContext('2d');
       const input = document.getElementById('photoInput');
       const downloadBtn = document.getElementById('downloadBtn');
+      const cropModal = document.getElementById('cropModal');
+      const cropImage = document.getElementById('cropImage');
 
       const TARGET_WIDTH = 1200;
       const TARGET_HEIGHT = 1800;
@@ -129,13 +158,8 @@
       background.src = '/AAA.jpg';
 
       let backgroundLoaded = false;
-      let userImage = null;
-      let imageX = frameArea.x;
-      let imageY = frameArea.y;
-      let imageScale = 1;
-      let dragging = false;
-      let startX, startY;
-      let lastDistance = null;
+      let cropper;
+      let croppedImage = null;
 
       background.onload = () => {
         backgroundLoaded = true;
@@ -148,100 +172,43 @@
 
         const reader = new FileReader();
         reader.onload = event => {
-          const img = new Image();
-          img.onload = () => {
-            userImage = img;
-            imageX = frameArea.x;
-            imageY = frameArea.y;
-            imageScale = 1;
-            drawCanvas();
-            downloadBtn.disabled = false;
-          };
-          img.src = event.target.result;
+          cropImage.src = event.target.result;
+          cropModal.style.display = 'flex';
+
+          if (cropper) {
+            cropper.destroy();
+          }
+
+          cropper = new Cropper(cropImage, {
+            aspectRatio: frameArea.width / frameArea.height,
+            viewMode: 1,
+            movable: true,
+            zoomable: true,
+            scalable: false,
+            cropBoxResizable: true,
+            responsive: true,
+            autoCropArea: 1
+          });
         };
         reader.readAsDataURL(file);
       });
 
-      function drawCanvas() {
-        if (!backgroundLoaded) return;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
-        if (userImage) {
-          const scaledWidth = frameArea.width * imageScale;
-          const scaledHeight = frameArea.height * imageScale;
-          ctx.drawImage(userImage, imageX, imageY, scaledWidth, scaledHeight);
-        }
+      function applyCrop() {
+        const canvasCrop = cropper.getCroppedCanvas({ width: frameArea.width, height: frameArea.height });
+        croppedImage = new Image();
+        croppedImage.onload = () => {
+          drawCanvas();
+          cropModal.style.display = 'none';
+          downloadBtn.disabled = false;
+        };
+        croppedImage.src = canvasCrop.toDataURL('image/png');
       }
 
-      canvas.addEventListener('mousedown', e => {
-        if (!userImage) return;
-        dragging = true;
-        startX = e.offsetX;
-        startY = e.offsetY;
-      });
-
-      canvas.addEventListener('mousemove', e => {
-        if (dragging && userImage) {
-          const dx = e.offsetX - startX;
-          const dy = e.offsetY - startY;
-          imageX += dx;
-          imageY += dy;
-          startX = e.offsetX;
-          startY = e.offsetY;
-          drawCanvas();
-        }
-      });
-
-      canvas.addEventListener('mouseup', () => dragging = false);
-      canvas.addEventListener('mouseleave', () => dragging = false);
-
-      canvas.addEventListener('wheel', e => {
-        if (!userImage) return;
-        e.preventDefault();
-        const delta = e.deltaY < 0 ? 0.05 : -0.05;
-        imageScale = Math.max(0.1, Math.min(5, imageScale + delta));
-        drawCanvas();
-      });
-
-      canvas.addEventListener('touchstart', e => {
-        if (e.touches.length === 2) {
-          const dx = e.touches[0].clientX - e.touches[1].clientX;
-          const dy = e.touches[0].clientY - e.touches[1].clientY;
-          lastDistance = Math.sqrt(dx * dx + dy * dy);
-        } else if (e.touches.length === 1) {
-          startX = e.touches[0].clientX;
-          startY = e.touches[0].clientY;
-          dragging = true;
-        }
-      });
-
-      canvas.addEventListener('touchmove', e => {
-        e.preventDefault();
-        if (e.touches.length === 2) {
-          const dx = e.touches[0].clientX - e.touches[1].clientX;
-          const dy = e.touches[0].clientY - e.touches[1].clientY;
-          const newDistance = Math.sqrt(dx * dx + dy * dy);
-          if (lastDistance) {
-            const scaleChange = (newDistance - lastDistance) / 100;
-            imageScale = Math.max(0.1, Math.min(5, imageScale + scaleChange));
-            drawCanvas();
-          }
-          lastDistance = newDistance;
-        } else if (e.touches.length === 1 && dragging) {
-          const dx = e.touches[0].clientX - startX;
-          const dy = e.touches[0].clientY - startY;
-          imageX += dx;
-          imageY += dy;
-          startX = e.touches[0].clientX;
-          startY = e.touches[0].clientY;
-          drawCanvas();
-        }
-      }, { passive: false });
-
-      canvas.addEventListener('touchend', () => {
-        dragging = false;
-        lastDistance = null;
-      });
+      function drawCanvas() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (backgroundLoaded) ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+        if (croppedImage) ctx.drawImage(croppedImage, frameArea.x, frameArea.y, frameArea.width, frameArea.height);
+      }
 
       function downloadPoster() {
         const link = document.createElement('a');
