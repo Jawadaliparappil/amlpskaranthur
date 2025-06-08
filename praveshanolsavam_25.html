@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KINDER HUT</title>
+  <title>AMLPS Karanthur Praveshanolsavam 2025</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
     body {
-    overflow-y: auto;
+      overflow-y: auto;
       font-family: 'Poppins', sans-serif;
       background: linear-gradient(-45deg, #667eea, #764ba2, #6dd5ed, #2193b0);
       background-size: 400% 400%;
@@ -113,14 +113,67 @@
       max-width: 90vw;
       max-height: 80vh;
     }
+
+    /* Styled name modal */
+    #nameModal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    #nameModal .modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 90%;
+      text-align: center;
+      box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+    }
+
+    #nameModal input {
+      width: 80%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    #nameModal button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      background: #667eea;
+      color: white;
+      cursor: pointer;
+    }
+
+    #nameModal button:hover {
+      background: #5a67d8;
+    }
   </style>
-  <link  href="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.css" rel="stylesheet" />
+  <link href="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.css" rel="stylesheet" />
 </head>
 <body>
-  <div class="container">
+  <div id="nameModal">
+    <div class="modal-content">
+      <h2>Enter Your Name</h2>
+      <input type="text" id="nameInput" placeholder="Type your name..." />
+      <button onclick="submitName()">Continue</button>
+    </div>
+  </div>
+
+  <div class="container" style="display: none;" id="mainContainer">
     <div class="header">
-      <h1>KINDER HUT Karanthur</h1>
-      
+      <h1>AMLPS Karanthur</h1>
     </div>
     <div class="instructions">
       Choose a photo.
@@ -130,94 +183,125 @@
       <canvas id="posterCanvas"></canvas>
     </div>
     <button class="button" id="downloadBtn" onclick="downloadPoster()" disabled>
-       Download Poster
+      💾 Download Poster
     </button>
 
     <div id="cropModal" style="display:none;">
       <div>
         <img id="cropImage" src="" alt="Crop preview">
-        <button class="button" onclick="applyCrop()">Crop and Apply</button>
+        <button class="button" onclick="applyCrop()">✅ Crop and Apply</button>
       </div>
     </div>
+  </div>
 
-    <script src="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.js"></script>
-    <script>
-      const canvas = document.getElementById('posterCanvas');
-      const ctx = canvas.getContext('2d');
-      const input = document.getElementById('photoInput');
-      const downloadBtn = document.getElementById('downloadBtn');
-      const cropModal = document.getElementById('cropModal');
-      const cropImage = document.getElementById('cropImage');
+  <script src="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.js"></script>
+  <script>
+    const canvas = document.getElementById('posterCanvas');
+    const ctx = canvas.getContext('2d');
+    const input = document.getElementById('photoInput');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const cropModal = document.getElementById('cropModal');
+    const cropImage = document.getElementById('cropImage');
+    const instructions = document.querySelector('.instructions');
+    const mainContainer = document.getElementById('mainContainer');
 
-      const TARGET_WIDTH = 1200;
-      const TARGET_HEIGHT = 1800;
-      canvas.width = TARGET_WIDTH;
-      canvas.height = TARGET_HEIGHT;
+    const TARGET_WIDTH = 1200;
+    const TARGET_HEIGHT = 1800;
+    canvas.width = TARGET_WIDTH;
+    canvas.height = TARGET_HEIGHT;
 
-      const frameArea = { x: 600, y: 1070, width: 400, height: 450 };
-      const background = new Image();
-      background.src = '/newaaa.jpg';
+    const frameArea = { x: 600, y: 1070, width: 400, height: 450 };
+    const background = new Image();
+    background.src = 'newaaa.jpg';
 
-      let backgroundLoaded = false;
-      let cropper;
-      let croppedImage = null;
+    let backgroundLoaded = false;
+    let cropper;
+    let croppedImage = null;
+    let userName = '';
 
-      background.onload = () => {
-        backgroundLoaded = true;
-        drawCanvas();
+    background.onload = () => {
+      backgroundLoaded = true;
+      drawCanvas();
+    };
+
+    input.addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (!file || !backgroundLoaded) return;
+
+      const reader = new FileReader();
+      reader.onload = event => {
+        cropImage.src = event.target.result;
+        cropModal.style.display = 'flex';
+
+        if (cropper) cropper.destroy();
+
+        cropper = new Cropper(cropImage, {
+          aspectRatio: frameArea.width / frameArea.height,
+          viewMode: 1,
+          movable: true,
+          zoomable: true,
+          scalable: false,
+          cropBoxResizable: true,
+          responsive: true,
+          autoCropArea: 1
+        });
       };
+      reader.readAsDataURL(file);
+    });
 
-      input.addEventListener('change', e => {
-        const file = e.target.files[0];
-        if (!file || !backgroundLoaded) return;
+    function applyCrop() {
+      const canvasCrop = cropper.getCroppedCanvas({ width: frameArea.width, height: frameArea.height });
+      croppedImage = new Image();
+      croppedImage.onload = () => {
+        drawCanvas();
+        cropModal.style.display = 'none';
+        downloadBtn.disabled = false;
+      };
+      croppedImage.src = canvasCrop.toDataURL('image/png');
+    }
 
-        const reader = new FileReader();
-        reader.onload = event => {
-          cropImage.src = event.target.result;
-          cropModal.style.display = 'flex';
-
-          if (cropper) {
-            cropper.destroy();
-          }
-
-          cropper = new Cropper(cropImage, {
-            aspectRatio: frameArea.width / frameArea.height,
-            viewMode: 1,
-            movable: true,
-            zoomable: true,
-            scalable: false,
-            cropBoxResizable: true,
-            responsive: true,
-            autoCropArea: 1
-          });
-        };
-        reader.readAsDataURL(file);
-      });
-
-      function applyCrop() {
-        const canvasCrop = cropper.getCroppedCanvas({ width: frameArea.width, height: frameArea.height });
-        croppedImage = new Image();
-        croppedImage.onload = () => {
-          drawCanvas();
-          cropModal.style.display = 'none';
-          downloadBtn.disabled = false;
-        };
-        croppedImage.src = canvasCrop.toDataURL('image/png');
+    function drawCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (backgroundLoaded) ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+      if (croppedImage) {
+        ctx.drawImage(croppedImage, frameArea.x, frameArea.y, frameArea.width, frameArea.height);
+        if (userName) {
+          ctx.font = "bold 36px Poppins";
+          ctx.fillStyle = "#000";
+          ctx.textAlign = "center";
+          ctx.fillText(userName, frameArea.x + frameArea.width / 2, frameArea.y + frameArea.height + 40);
+        }
       }
+    }
 
-      function drawCanvas() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        if (backgroundLoaded) ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
-        if (croppedImage) ctx.drawImage(croppedImage, frameArea.x, frameArea.y, frameArea.width, frameArea.height);
-      }
+    function downloadPoster() {
+      const imageData = canvas.toDataURL('image/png', 1.0);
 
-      function downloadPoster() {
+      try {
         const link = document.createElement('a');
         link.download = 'amlp_karanthur.png';
-        link.href = canvas.toDataURL('image/png', 1.0);
+        link.href = imageData;
         link.click();
+      } catch (e) {
+        window.open(imageData, '_blank');
       }
-    </script>
-  </div>
+
+      // fallback in case automatic click doesn't work
+      setTimeout(() => {
+        window.open(imageData, '_blank');
+      }, 100);
+    }
+
+    function submitName() {
+      const nameInput = document.getElementById('nameInput').value.trim();
+      if (!nameInput) {
+        alert("Please enter your name.");
+        return;
+      }
+      userName = nameInput;
+      document.getElementById('nameModal').style.display = 'none';
+      mainContainer.style.display = 'block';
+    }
+  </script>
 </body>
 </html>
