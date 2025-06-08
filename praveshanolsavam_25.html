@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AMLPS Karanthur Praveshanolsavam 2025</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     body {
       overflow-y: auto;
@@ -178,18 +178,18 @@
     <div class="instructions">
       Choose a photo.
     </div>
-    <input type="file" id="photoInput" accept="image/*" class="button">
+    <input type="file" id="photoInput" accept="image/*" class="button" />
     <div class="canvas-container">
       <canvas id="posterCanvas"></canvas>
     </div>
     <button class="button" id="downloadBtn" onclick="downloadPoster()" disabled>
-      💾 Download Poster
+      Download Poster
     </button>
 
     <div id="cropModal" style="display:none;">
       <div>
-        <img id="cropImage" src="" alt="Crop preview">
-        <button class="button" onclick="applyCrop()">✅ Crop and Apply</button>
+        <img id="cropImage" src="" alt="Crop preview" />
+        <button class="button" onclick="applyCrop()">Crop and Apply</button>
       </div>
     </div>
   </div>
@@ -275,21 +275,20 @@
     }
 
     function downloadPoster() {
-      const imageData = canvas.toDataURL('image/png', 1.0);
-
-      try {
+      canvas.toBlob(function(blob) {
+        if (!blob) {
+          alert("Failed to prepare image for download.");
+          return;
+        }
+        const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
+        link.href = url;
         link.download = 'amlp_karanthur.png';
-        link.href = imageData;
+        document.body.appendChild(link);
         link.click();
-      } catch (e) {
-        window.open(imageData, '_blank');
-      }
-
-      // fallback in case automatic click doesn't work
-      setTimeout(() => {
-        window.open(imageData, '_blank');
-      }, 100);
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      }, 'image/png', 1.0);
     }
 
     function submitName() {
