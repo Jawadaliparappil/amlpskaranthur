@@ -1,178 +1,136 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AMLPS Karanthur - Primary School</title>
-   <link rel="stylesheet"type="text/css" href="style.css">
-  <link rel="icon" href="47226_logo_1.png" type="image/x-icon">
-<link rel="shortcut icon" href="47226_logo_1.png" type="image/x-icon">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AMLPS Karanthur - Primary School</title>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+  <link rel="icon" href="47226_logo_1.png" type="image/x-icon" />
+  <link rel="shortcut icon" href="47226_logo_1.png" type="image/x-icon" />
 </head>
-
 <body>
-    <header>
-        <div class="container header-container">
-            <div class="logo">
-                <img src="47226_logo_1.png">
-                <div class="school-name">
-                    <h1>AMLPS Karanthur</h1>
-                    <p>Nurturing Minds, Building Futures</p>
-                </div>
-            </div>
-            <nav>
-                <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="about.html">About</a></li>
-                    <li><a href="acadamics.html">Academics</a></li>
-                    <li><a href="admission.html">Admissions</a></li>
-                    <li><a href="gallery.html">Gallery</a></li>
-                    <li><a href="contact.html">Contact</a></li>
-                </ul>
-            </nav>
+  <header>
+    <div class="container header-container">
+      <div class="logo">
+        <img src="47226_logo_1.png" alt="Logo" />
+        <div class="school-name">
+          <h1>AMLPS Karanthur</h1>
+          <p>Nurturing Minds, Building Futures</p>
         </div>
-    </header>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="academics.html">Academics</a></li>
+          <li><a href="admission.html">Admissions</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
  <section class="features" id="gallery">
-        <div class="container">
-            <div class="section-title">
-                <h2>School Gallery</h2>
-            </div>
-   <div class="gallery-container">
-    <div class="gallery" id="gallery">
-      <div class="gallery-item">
-        <img src="/gallery/art.webp" alt="art">
+  <div class="container">
+    <div class="section-title">
+      <h2>School Gallery</h2>
+    </div>
+
+    <div class="year-tabs">
+      <button class="tab-btn active" onclick="showGallery('2025')">2025</button>
+      <button class="tab-btn" onclick="showGallery('2024')">2024</button>
+      <button class="tab-btn" onclick="showGallery('2023')">2023</button>
+    </div>
+
+    <div class="gallery-container">
+      <div class="gallery-group" id="gallery-2025">
+        <div class="gallery-item"><img src="/gallery/art.webp" alt="Art 2025"></div>
+        <div class="gallery-item"><img src="/gallery/onam.webp" alt="Onam 2025"></div>
+        <div class="gallery-item"><img src="/gallery/reading.webp" alt="Reading 2025"></div>
       </div>
-      <div class="gallery-item">
-        <img src="/gallery/inde.webp" alt="Independance Day">
+
+      <div class="gallery-group hidden" id="gallery-2024">
+        <div class="gallery-item"><img src="/gallery/inde.webp" alt="Independence 2024"></div>
+        <div class="gallery-item"><img src="/gallery/sports1.webp" alt="Sports 2024"></div>
       </div>
-      <div class="gallery-item">
-        <img src="/gallery/onam.webp" alt="Onam">
-      </div>
-      <div class="gallery-item">
-        <img src="/gallery/reading.webp" alt="Reading">
-      </div>
-      <div class="gallery-item">
-        <img src="/gallery/sports1.webp" alt="Sports Day">
-      </div>
-      <div class="gallery-item">
-        <img src="/api/placeholder/800/800" alt="">
-      </div>
-      <div class="gallery-item">
-        <img src="/api/placeholder/800/800" alt="">
-      </div>
-      <div class="gallery-item">
-        <img src="/api/placeholder/800/800" alt="">
-      </div>
-      <div class="gallery-item">
-        <img src="/api/placeholder/800/800" alt="">
-      </div>
-      <div class="gallery-item">
-        <img src="/api/placeholder/800/800" alt="">
-      </div>
-      <div class="gallery-item">
-        <img src="/api/placeholder/800/800" alt="">
-      </div>
-      <div class="gallery-item">
-        <img src="/api/placeholder/800/800" alt="">
-      </div>
-      <div class="gallery-item">
-        <img src="/api/placeholder/800/800" alt="">
-      </div>
-      <div class="gallery-item">
-        <img src="/api/placeholder/800/800" alt="">
-      </div>
-      <div class="gallery-item">
-        <img src="/api/placeholder/800/800" alt="">
-      </div>
-      <div class="gallery-item">
-        <img src="/api/placeholder/800/800" alt="">
-      </div>
-      <div class="gallery-item">
-        <img src="/api/placeholder/800/800" alt="">
-      </div>
-      <div class="gallery-item">
-        <img src="/api/placeholder/800/800" alt="">
-      </div>
-      <div class="gallery-item">
-        <img src="/api/placeholder/800/800" alt="">
-      </div>
-      <div class="gallery-item">
-        <img src="/api/placeholder/800/800" alt="">
-      </div>
-      <div class="gallery-item">
-        <img src="/api/placeholder/800/800" alt="">
-      </div>
-      <div class="gallery-item">
-        <img src="/api/placeholder/800/800" alt="">
-      </div>
-      <div class="gallery-item">
-        <img src="/api/placeholder/800/800" alt="">
-      </div>
-      <div class="gallery-item">
-        <img src="/api/placeholder/800/800" alt="">
-      </div>
-      <div class="gallery-item">
-        <img src="/api/placeholder/800/800" alt="">
-      </div>
-      <div class="gallery-item">
-        <img src="/api/placeholder/800/800" alt="">
-      </div>
-      <div class="gallery-item">
-        <img src="/api/placeholder/800/800" alt="">
-      </div>
-      <div class="gallery-item">
-        <img src="/api/placeholder/800/800" alt="">
-      </div>
-      <div class="gallery-item">
-        <img src="/api/placeholder/800/800" alt="">
-      </div>
-      <div class="gallery-item">
-        <img src="/api/placeholder/800/800" alt="">
+
+      <div class="gallery-group hidden" id="gallery-2023">
+        <div class="gallery-item"><img src="/api/placeholder/800/800" alt="Event 2023"></div>
+        <div class="gallery-item"><img src="/api/placeholder/800/800" alt="Event 2023"></div>
       </div>
     </div>
-     </div>
-     </div>
-         </section>
-<footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-column">
-                    <h3>AMLPS Karanthur</h3>
-                    <p>Nurturing young minds and building a strong foundation for a bright future through quality education and holistic development.</p>
-                </div>
-                <div class="footer-column">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                    <li><a href="about.html">About</a></li>
-                    <li><a href="acadamics.html">Academics</a></li>
-                    <li><a href="admission.html">Admissions</a></li>
-                    <li><a href="gallery.html">Gallery</a></li>
-                    <li><a href="contact.html">Contact</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>Programs</h3>
-                    <ul>
-                        <li><a href="#">Pre-Primary</a></li>
-                        <li><a href="#">Primary (Classes 1-5)</a></li>
-                        <li><a href="#">After-School Activities</a></li>
-                        <li><a href="#">Summer Camps</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>Connect With Us</h3>
-                    <ul>
-                        <li><a href="https://www.facebook.com/share/1GdX8Qpjcb/?mibextid=wwXIfr">Facebook</a></li>
-                        <li><a href="https://www.instagram.com/amlps_karanthur?igsh=MWlsbGlhdHk5Yjkybw%3D%3D&utm_source=qr">Instagram</a></li>
-                        <li><a href="https://youtube.com/@amlpskaranthur?si=QbwXziOj2M7HiKdI">YouTube</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="copyright">
-                <p>&copy; 2025 AMLPS Karanthur. All Rights Reserved.</p>
-            </div>
+  </div>
+</section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-column">
+          <h3>AMLPS Karanthur</h3>
+          <p>
+            Nurturing young minds and building a strong foundation for a bright
+            future through quality education and holistic development.
+          </p>
         </div>
-    </footer>
-    </body>
-</html>   
- 
+        <div class="footer-column">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="academics.html">Academics</a></li>
+            <li><a href="admission.html">Admissions</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Programs</h3>
+          <ul>
+            <li><a href="#">Pre-Primary</a></li>
+            <li><a href="#">Primary (Classes 1–5)</a></li>
+            <li><a href="#">After-School Activities</a></li>
+            <li><a href="#">Summer Camps</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Connect With Us</h3>
+          <ul>
+            <li><a href="https://www.facebook.com/share/1GdX8Qpjcb/?mibextid=wwXIfr">Facebook</a></li>
+            <li><a href="https://www.instagram.com/amlps_karanthur?igsh=MWlsbGlhdHk5Yjkybw%3D%3D&utm_source=qr">Instagram</a></li>
+            <li><a href="https://youtube.com/@amlpskaranthur?si=QbwXziOj2M7HiKdI">YouTube</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="copyright">
+        <p>&copy; 2025 AMLPS Karanthur. All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.querySelectorAll('.view-more').forEach(button => {
+      button.addEventListener('click', () => {
+        const targetClass = button.dataset.target;
+        const gallery = document.querySelector(`.${targetClass}`);
+        const hiddenItems = gallery.querySelectorAll('.hidden');
+        hiddenItems.forEach(item => item.classList.remove('hidden'));
+        button.style.display = 'none';
+      });
+    });
+  </script>
+  <script>
+function showGallery(year) {
+  const groups = document.querySelectorAll('.gallery-group');
+  const tabs = document.querySelectorAll('.tab-btn');
+
+  groups.forEach(g => g.classList.add('hidden'));
+  tabs.forEach(t => t.classList.remove('active'));
+
+  document.getElementById('gallery-' + year).classList.remove('hidden');
+  event.target.classList.add('active');
+}
+</script>
+
+</body>
+</html>
