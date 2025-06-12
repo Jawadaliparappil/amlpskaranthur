@@ -668,4 +668,45 @@
       text-align: center;
       margin: 2rem 0;
     }
- 
+
+
+.year-tabs {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.tab-btn {
+  background-color: #f0f0f0;
+  border: none;
+  padding: 10px 20px;
+  margin: 0 10px;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+.tab-btn.active, .tab-btn:hover {
+  background-color: #007BFF;
+  color: white;
+}
+.gallery-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+}
+.gallery-item {
+  width: 220px;
+  height: 160px;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.hidden {
+  display: none;
+}
+
