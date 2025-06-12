@@ -700,7 +700,8 @@
             .slide-content h2 {
                 font-size: 1.8rem;
             }
-        }.year-tabs {
+        }
+.year-tabs {
   text-align: center;
   margin-bottom: 20px;
 }
