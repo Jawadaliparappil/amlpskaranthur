@@ -8,6 +8,18 @@
   <link rel="icon" href="47226_logo_1.png" type="image/x-icon">
 <link rel="shortcut icon" href="47226_logo_1.png" type="image/x-icon">
 </head>
+ <script>
+  document.querySelectorAll('.view-more').forEach(button => {
+    button.addEventListener('click', () => {
+      const targetClass = button.dataset.target;
+      const gallery = document.querySelector(`.${targetClass}`);
+      const hiddenItems = gallery.querySelectorAll('.hidden');
+      hiddenItems.forEach(item => item.classList.remove('hidden'));
+      button.style.display = 'none';
+    });
+  });
+</script>
+
 <body>
     <header>
         <div class="container header-container">
