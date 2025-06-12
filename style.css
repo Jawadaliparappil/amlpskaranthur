@@ -668,24 +668,4 @@
       text-align: center;
       margin: 2rem 0;
     }
-   .hidden {
-  display: none;
-}
-
-.view-more {
-  background-color: #3498db;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  font-size: 14px;
-  margin: 20px auto 40px;
-  display: block;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.view-more:hover {
-  background-color: #2980b9;
-}
-
+ 
