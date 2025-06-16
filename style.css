@@ -514,7 +514,7 @@
   will-change: transform, opacity;
 }
 
-.teacher-card.visible {
+.teacher-card1.visible {
   opacity: 1;
   transform: translateY(0);
 }
