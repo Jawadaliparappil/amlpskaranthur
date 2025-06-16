@@ -502,6 +502,10 @@
 }
 
 .teacher-card {
+        width: 250px;
+  height: 350px;
+  perspective: 1000px;
+  cursor: pointer;
   opacity: 0;
   transform: translateY(50px);
   transition: opacity 0.8s ease-out, transform 0.8s ease-out;
